@@ -1,0 +1,106 @@
+<main class="cart-container">
+
+  <h2 *ngIf="!isLoading">
+    Tu Carrito <span *ngIf="totalCount > 0">({{ totalCount }} productos)</span>
+  </h2>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando productos...</p>
+  </div>
+
+  <div *ngIf="cartError" class="error-message">
+    {{ cartError }}
+  </div>
+
+  <div *ngIf="!isLoading && cartItems.length === 0" class="empty-cart-container">
+    <div class="icon-wrapper">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-cart-icon">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        <line x1="3" y1="3" x2="21" y2="21"></line> </svg>
+    </div>
+
+    <h3>Tu carrito está vacío</h3>
+
+    <p>
+      Aún no has agregado productos para comparar.<br>
+      <strong>¡Empieza a buscar y ahorra dinero!</strong>
+    </p>
+
+    <div class="suggestions">
+      <span>¿Qué tal si buscas?</span>
+      <ul>
+        <li>Canasta familiar (Arroz, Aceite, Huevos)</li>
+        <li>Tecnología (Celulares, Portátiles)</li>
+        <li>Aseo del hogar</li>
+      </ul>
+    </div>
+
+    <a routerLink="/" class="start-shopping-btn">
+      Ir a Buscar Productos
+    </a>
+  </div>
+
+  <div *ngIf="!isLoading && !cartError && cartItems.length > 0" class="cart-content">
+
+    <div class="items-list">
+      <div *ngFor="let item of cartItems" class="cart-item">
+        <div class="item-info">
+          <span class="store-badge">{{ item.store }}</span>
+          <h3>{{ item.product }}</h3>
+          <div class="item-meta">
+            <span>Cantidad: <strong>{{ item.quantity }} {{ item.unit }}</strong></span>
+            <a *ngIf="item.url" [href]="item.url" target="_blank" class="link">Ver en tienda ↗</a>
+          </div>
+        </div>
+
+        <div class="item-pricing">
+          <span class="total-item-price">$ {{ (item.price * item.quantity) | number:'1.0-0' }}</span>
+          <small class="unit-price">($ {{ item.price | number:'1.0-0' }} c/u)</small>
+
+          <button (click)="askDeleteItem(item._id, item.product)" class="delete-btn" title="Eliminar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <h3>Resumen del Pedido</h3>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>$ {{ totalPrice | number:'1.0-0' }}</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span class="final-price">$ {{ totalPrice | number:'1.0-0' }}</span>
+      </div>
+      <button class="checkout-btn">Finalizar Compra</button>
+
+      <button (click)="askClearCart()" class="clear-btn">Vaciar Carrito</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="showModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      </div>
+      <h3>Confirmación</h3>
+      <p>{{ modalMessage }}</p>
+
+      <div class="modal-buttons">
+        <button (click)="closeModal()" class="modal-btn cancel" [disabled]="isProcessing">Cancelar</button>
+        <button (click)="confirmAction()" class="modal-btn confirm" [disabled]="isProcessing">
+          <span *ngIf="!isProcessing">Sí, eliminar</span>
+          <span *ngIf="isProcessing">Procesando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>

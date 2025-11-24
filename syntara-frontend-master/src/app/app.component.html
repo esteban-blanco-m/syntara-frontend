@@ -1,0 +1,62 @@
+<header class="header">
+  <div class="header-left">
+
+    <a *ngIf="currentUser && showHeaderLinks"
+       routerLink="/history"
+       class="nav-link history-icon-button"
+       aria-label="Ver historial">
+      <img src="assets/images/historial.png" alt="Historial" class="history-icon-img">
+      <span class="tooltip">Ver historial</span>
+    </a>
+
+    <a *ngIf="currentUser && showHeaderLinks"
+       routerLink="/cart"
+       class="nav-link history-icon-button"
+       style="margin-left: 10px;"
+       aria-label="Ver carrito">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#004b3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span class="tooltip">Ver Carrito</span>
+    </a>
+
+    <div class="logo-container" (click)="goHome()">
+      <img
+        src="assets/images/logopequ.png"
+        alt="Syntara Logo"
+        class="header-logo header-home-button">
+      <span class="header-title">Syntara</span>
+    </div>
+  </div>
+
+  <nav class="navigation">
+    <a *ngIf="showHeaderLinks && (!currentUser || (currentUser && !currentUser.isSubscribed))"
+       routerLink="/subscription"
+       class="nav-link">
+      Suscríbete
+    </a>
+    <a *ngIf="showHeaderLinks && !currentUser"
+       routerLink="/login"
+       class="nav-link">
+      Iniciar Sesión
+    </a>
+    <div *ngIf="showHeaderLinks && currentUser" class="user-actions" style="display:flex; gap:10px; align-items:center;">
+      <button (click)="logout()" class="nav-link" style="cursor:pointer; border: 1px solid rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.25);">
+        Salir
+      </button>
+    </div>
+  </nav>
+</header>
+
+<div [@routeAnimations]="getRouteAnimationData()">
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="isLoading" class="logout-overlay">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <p>Cerrando sesión...</p>
+  </div>
+</div>
